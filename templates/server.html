@@ -1,0 +1,168 @@
+<!--app strucuture-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Akatsuki</title>
+    <link rel="icon" href="./static/assests/favicon1.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='server.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+</head>
+<body>
+
+
+    <div id="menu_bar" >
+        <div  style="font-family: mcregular;color: antiquewhite; text-align: left; text-shadow: 2px .5px rgb(255, 0, 0);position: relative;left: 30px;font-size: large;width: 20%;">
+            <a href="/" style="text-decoration: none;"> A K A T S U K I</a>
+
+        </div>
+        <div id="user_status" style="width: 60%;height: 100%;border: 1px solid white;color: white;">
+            
+        </div>
+            <div id="menu_icons">
+
+                <div id="exit_door" style="font-family: mcregular;color: white;background-color: black;width: 10vh;height: 3vh;border: 1px solid white;position: relative;top: 1vh;margin-right: 3vh;text-align: center;">
+                    logout
+                </div>
+
+                <div id="notifications" class="icons" >
+                    <img src="./static/icons/bell-solid-full.svg" >
+                </div>
+                <div class="icons" id = "settings">
+                    <img src="./static/icons/gear-solid-full.svg" >
+                 </div>
+                <div class="icons" id="user">
+                    <img src="./static/icons/users-solid-full.svg" >
+                </div>
+
+            </div>
+    </div>
+
+            <div style="width: 100%;height: 76vh;display: flex;position: relative;top: 30vh;border: 1px solid white;justify-content: space-around;top: 5vh;">
+                <div class="panels" id="left">
+                    <br>
+                    <div class="channels" id="gen"># life-talks 🍉</div>
+                    <div class="channels" id="muscle"># muscle 💪</div>
+                    <div class="channels" id="money"> # money 💰</div>
+                    <br>
+                    <div id="leaderboard" class="channels">
+                        leaderboard 🏆
+                        <br>
+                        <input type="text" placeholder="search members" style="border: none;" class="channels search">
+                    </div>
+
+                </div>
+                <div class="panels" id="mid">
+
+                    <div id="room_title" > values to be plugged in :)</div>
+
+                    <div id="chat_interface" class="panels"></div>
+
+
+                    <div id="msg_body" >
+                        <div id="attachments" class="icons" style="text-indent: -0.4vh;font-size:x-large;">
+                            📁
+                        </div>
+                        <div id="emojis" class="icons" style="text-indent: -0.4vh;font-size:x-large;" >
+                            😂
+                            
+                        </div>
+                        <input type="text"  id="chat_ip" placeholder="type a message..." >
+                        
+                        <div id="send_button" class="icons" style="margin-left: 3vh;text-indent: -0.4vh;font-size:x-large;" >
+                            🚨</div>
+                        <div id="mic" class="icons" style="text-indent: -0.4vh;font-size:x-large;">
+                            🎤
+                        </div>
+
+                    </div>
+                    
+                </div>
+                
+                <div class="panels" id="right" style="display: flex;flex-direction: column; align-items: center;">
+                    <br>
+                    <div id="members" class="channels">
+                        members ✔
+                        <br>
+                        <input type="text" placeholder="search members" style="border: none;" class="channels search">
+                    </div>
+
+                    <div id="ur_XP" class="channels">
+                        ur contribution 💹
+                        
+
+                    </div>
+                </div>
+            </div>
+        
+        <div id="profile_box" class="exit_button_profile_hide">
+            <div style="width: 150px;height: 150px;border-radius: 100px;border: 1px solid black;position: absolute;left: 30%;top: 10%;" id="prof_pic">
+               
+            </div>
+            <div  id="exit"> ❌</div>
+            <br>
+            <h2 id="tok_no"></h2>
+            <h3 id="prof_name"></h3>
+            <br>
+            <h4 id="prof_hobby"></h4>
+            <p id="age"></p>
+            <p id="prof_XP"></p>
+            <p id="status"></p>
+
+
+                
+        </div>
+
+
+
+
+<footer>
+
+    <div id="footer_box">
+        
+    <div class="footer_details"> 
+        <p style="text-align: center;font-family: mcregular;">meet the dev</p>
+        <div style="display: flex;justify-content: space-evenly;"> 
+            <div style="position: relative;top: -30px;">
+                <img src="./static/assests/favicon1.png" style="height: 50px;width: 50px;border-radius: 50px;"></div>
+            <div style="position: relative;top: -25px;">
+                <p style="font-family: mcregular;">Anonymous Jinchuriki 0512</p>
+            </div>
+            
+
+        </div>
+        <div style="position: relative;top: -25px;">
+            <p class="footer_content">hello, I'm Kushal <br>this community is built by a Loner who seeks peace in this world. wants to make living out of his hardwork. eagerly looking for like-minded ppl to thrive</p>
+        </div>
+    </div>
+
+    <div class="footer_details" style="text-align: center;"> 
+        <h2 style="position: relative;top: 30%;">2025 Akatsuki ©</h2>
+    </div>
+
+    <!-- BUILDING FAQ ACCORDIAN-->
+
+
+    <div class="footer_details">
+
+
+        <h3 style="text-align: center;font-family: mcregular;">FAQ</h3>
+        <div  class="faq " id="faq1">* how tokenization works ?</div>
+        <div class="faq" id="faq2">* contact details</div>
+        <div class="faq" id="faq3">* Terms and conditions</div>
+        <div class="faq" id="faq4">* spam / NFSW blocker</div>
+    </div>
+    </div>
+
+
+</footer>
+    <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+
+</body>
+
+
+</html>

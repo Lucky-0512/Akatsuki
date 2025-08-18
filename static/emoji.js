@@ -1,0 +1,1 @@
+import 'https://cdn.jsdelivr.net/npm/emoji-picker-element/index.js';

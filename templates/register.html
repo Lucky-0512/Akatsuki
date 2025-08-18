@@ -1,0 +1,118 @@
+<!--app strucuture-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Akatsuki</title>
+    <link rel="icon" href="./static/assests/favicon1.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+</head>
+<body>
+
+    <div id="tori_gate">
+        <a href="/" style="text-decoration: none;">
+            <h1 style="font-family: mcregular;color: antiquewhite; text-align: center; text-shadow: 2px .5px rgb(255, 0, 0);margin-top: 50px;"> A K A T S U K I</h1>
+        </a>
+           
+            
+    
+        <h3 style="font-family: mcregular;color: rgb(182, 15, 15);text-align: center;">
+            <big>online community for Loners.</big> 
+        </h3>
+    
+        <h3 style="font-family: mcregular;color: rgb(182, 15, 15);margin-left: 15%;">
+            We'll talk about money, muscle and life. we'll have fun , discuss and grow :) <br>
+            
+        </h3>
+        <h3 style="font-family: mcregular;color: rgb(182, 15, 15);margin-left: 30%;">
+            YOU ARE NOT ALONE - open for Anyone 
+        </h3>
+    
+    
+    
+        <div id="container" style="position: relative;">
+                            
+        <div id="logo">
+            <img src="./static/assests/favicon.png" alt="logo" style="width: 150px;height: 150px; border-radius: 100px;position: relative;">
+                    
+        </div>
+                <div id="box_login">
+                   <a href="/login" style="text-decoration: none;">
+                    <button style = "position:absolute;right:5px;top:5px;font-family:mcregular;cursor:pointer" >login<br>instead?</button>
+                   </a> 
+
+                   <form action="/send_otp" method="post">
+                    <label style = "font-family:mcregular;color:white;position:absolute;top:120px;font-size:large" >enter your email: </label>
+                    <input type="text" id="ip_mail" style="height:30px;position:relative;top:90px" name="e-mail" placeholder="xyz@smtg.com" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
+                    <button id="otp"  name="onetp" style="font-family:mcregular;position:absolute;right:50px;background-color:black;color:red;top:55%" type="submit">get<br>OTP</button>
+                   </form>
+                    
+                    <br>
+                    <p style="color:white;font-family:mcregular;font-family:mcregular">- - - - - or - - - - -</p>
+                    <button id="google_auth_button" style= "font-family:mcregular;height:30px;position:absolute;bottom:20px;cursor:pointer">sign up with google</button>
+                   
+    
+                </div>
+    
+     
+    </div>
+    
+    
+        
+    </div>
+    
+<footer>
+
+    <div id="footer_box">
+        
+    <div class="footer_details"> 
+        <p style="text-align: center;font-family: mcregular;">meet the dev</p>
+        <div style="display: flex;justify-content: space-evenly;"> 
+            <div style="position: relative;top: -30px;">
+                <img src="./static/assests/favicon1.png" style="height: 50px;width: 50px;border-radius: 50px;"></div>
+            <div style="position: relative;top: -25px;">
+                <p style="font-family: mcregular;">Anonymous Jinchuriki 0512</p>
+            </div>
+            
+
+        </div>
+        <div style="position: relative;top: -25px;">
+            <p class="footer_content">hello, I'm Kushal <br>this community is built by a Loner who seeks peace in this world. wants to make living out of his hardwork. eagerly looking for like-minded ppl to thrive</p>
+        </div>
+    </div>
+
+    <div class="footer_details" style="text-align: center;"> 
+        <h2 style="position: relative;top: 30%;">2025 Akatsuki ©</h2>
+    </div>
+
+    <!-- BUILDING FAQ ACCORDIAN-->
+
+
+    <div class="footer_details">
+
+
+        <h3 style="text-align: center;font-family: mcregular;">FAQ</h3>
+        <div  class="faq " id="faq1">* how tokenization works ?</div>
+        <div class="faq" id="faq2">* contact details</div>
+        <div class="faq" id="faq3">* Terms and conditions</div>
+        <div class="faq" id="faq4">* spam / NFSW blocker</div>
+    </div>
+    </div>
+
+
+</footer>
+
+
+   
+
+
+
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+
+</body>
+
+
+</html>
