@@ -383,10 +383,44 @@ socket.on('broadcast_msg',(data)=>{
     const msg_holder = document.createElement('div')
     msg_holder.textContent = data
 
-    msg_holder.classList.add('chatbubble')
+    msg_holder.classList.add('chatbubble_own')
 
     chat_interface.appendChild(msg_holder)
     msg_ip.value = ""
     })
 
+
+ //and also the JS should handle the message box div's positon efore append it to the div.
+ //i.e if the msg token_no asscociated = session[token] i.e is th current user's token, then append it to the left.
+//for al the other msgs , append it to the right.
+    
+
+socket.on('data_fetched?',(data)=>{
+    //const msg_token_list = data.msg_list.map(i => i[0])
+    //const msg_main_list = data.msg_list.map(i => i[1]) 
+    const content_list = data;   
+    content_list.forEach((i) =>{
+        if(i[0] === data.token_type){     
+            // put it in DIV and append as child of the right of the div.
+            const div_load = document.createElement(div)
+            div_load.classList.add('chatbubble_own')
+            div_load.textContent = i[1]
+            chat_interface.appendChild(div_load)                       
+    
+    
+        }
+
+        else{
+
+            // put it in DIV and append as child of the left of the div.
+            const div_load = document.createElement(div)
+            div_load.classList.add('chatbubble_others')
+            div_load.textContent = i[1]
+            chat_interface.appendChild(div_load)   
+        }
+
+    })
+
+
+})    
 

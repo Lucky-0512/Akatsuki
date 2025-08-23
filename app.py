@@ -278,7 +278,16 @@ def insert_msg(data):
 # for now I'm pushing thee source code to the git hub. # 17/08 2025 @6 :32 pm.   
 
 
-@socketio.on('fetch_msgs',(data)=>{})
+@socketio.on('fetch_msgs')
+def fetch_msgs(data):
+    cur.execute('select token_no,message from messages where room = %s',(data))
+    fetch_data = cur.fetchall()
+    cur.execute('select distinct token_no from messages where room = %s AND user_mail=%s',(data,session['email']))
+    current_token = cur.fetchall()
+    msgs_fetched = [ [i[0],i[1]] for i in fetch_data]
+    print(msgs_fetched)
+    emit('got_fetched?',{'msg_list':msgs_fetched,'token_type':current_token})
+
 
     
         

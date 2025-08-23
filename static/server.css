@@ -221,7 +221,20 @@
     visibility: visible;
 }
 
-.chatbubble {
+.chatbubble_own {
+    display: inline-block;
+    background: #4a90e2;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 12px;
+    max-width: 40%;
+    word-wrap: break-word;
+    margin: 4px 0;
+    margin-right: 2vh;
+  }
+
+
+  .chatbubble_others {
     display: inline-block;
     background: #4a90e2;
     color: white;
@@ -232,4 +245,5 @@
     margin: 4px 0;
     margin-left: 2vh;
   }
+  
   
