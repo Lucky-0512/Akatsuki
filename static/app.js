@@ -285,19 +285,24 @@ user_icon.addEventListener('click',()=>{
 const channels = document.querySelectorAll('.channels')
 
 channels.forEach((el)=>{
-    el.addEventListener('click',()=>{
+    el.addEventListener('click',()=>{  // going through everychanngel and check for the channel toggled.
         const room_title = document.getElementById('room_title')
         room_title.textContent = el.textContent
 
+        // loading up all the data from the server on toggling.
+
         // emitting a socket event.
         if(el.textContent == "# life-talks 🍉"){
-            socket.emit('channel_triggered',{'status':true,'room':"lifetalks"})
-            
-        }
+            chat_interface.innerHTML = ''
+            // sending the triggerd channel/room name to the server
+            socket.emit('channel_triggered',{'status':true,'room':"lifetalks"}) 
+                    }
         else if(el.textContent == "# muscle 💪"){
+            chat_interface.innerHTML = ''
             socket.emit('channel_triggered',{'status':true,'room':"muscle"})
         }
         else{
+            chat_interface.innerHTML = ''
             socket.emit('channel_triggered',{'status':true,'room':"money"})
         }
         
@@ -329,41 +334,45 @@ socket.on('session_data',(data)=>{
                 
 })      
 
+
+
+// this event listener to insert the user netered in the db and ask server to fetch msg so that JS can erecive the same msg and add it to div, (via another listener)
+
 msg_ip.addEventListener('keydown',(e)=>{
     if(e.key === "Enter"){
-
         channels.forEach((el)=>{
+            // this set of data has the user_msg copntent field that is sent to server.
             const prep_info = {'token':`${session_data.token}`,"msg_content":`${msg_ip.value}`,'room':'lifetalks','email':`${session_data.email}`,'name':`${session_data.name}`}
+            // we can simple add divs to the chat intreface on client side. but it will show up irrespective of the channel triggerd.
+            // so we need to append it only to the users currently active in that chat interface.
 
             if(el.textContent == "# life-talks 🍉"){
                 prep_info.room = 'lifetalks'
-                chat_interface.innerHTML = ''
-                // here load up all the msgs from db's chat hostorry related to that specific room.
-
-                // telling srvr to load up all msg ist of room = lifetalks.
-                socket.emit('fetch_msgs',{'toroom':prep_info.room})
+ 
+                // telling srvr to broadcast msg 
+                socket.emit('fetch_msgs',{'toroom':prep_info.room,'msg_value':prep_info.msg_content})
                 
             }
             
             else if(el.textContent == "# muscle 💪"){
                 prep_info.room = 'muscle'
-                chat_interface.innerHTML = ''
+               // chat_interface.innerHTML = ''
               
                 // telling srvr to load up all msg ist of room = muscle.
-                socket.emit('fetch_msgs',{'toroom':prep_info.room})
+                socket.emit('fetch_msgs',{'toroom':prep_info.room,'msg_value':prep_info.msg_content})
                 
             }
             
             else if(el.textContent == "# money 💰"){
                 prep_info.room = 'money'
-                chat_interface.innerHTML = ''
+               // chat_interface.innerHTML = ''
                 
                 // telling srvr to load up all msg ist of room = moey.
-                socket.emit('fetch_msgs',{'toroom':prep_info.room})
+                socket.emit('fetch_msgs',{'toroom':prep_info.room,'msg_value':prep_info.msg_content})
 
             }
 
-            socket.emit('cha',prep_info)
+            socket.emit('cha',prep_info)  // emit event caught by a socket listener on app.py that listens and insert the field in DB.
 
 
         
@@ -376,15 +385,13 @@ msg_ip.addEventListener('keydown',(e)=>{
     }
 })
 
-//  A socket listenr that listneis to message sent by server to broadcast it to all users confined to a scpeific room.
-socket.on('broadcast_msg',(data)=>{
-                    
+//A socket listenr that listneis to message sent by server to broadcast it to all users confined to a scpeific room.
+socket.on('addoff',(data)=>{
+                   
     // do these once the server boradcatss.
     const msg_holder = document.createElement('div')
     msg_holder.textContent = data
-
     msg_holder.classList.add('chatbubble_own')
-
     chat_interface.appendChild(msg_holder)
     msg_ip.value = ""
     })
@@ -395,7 +402,7 @@ socket.on('broadcast_msg',(data)=>{
 //for al the other msgs , append it to the right.
     
 
-socket.on('data_fetched?',(data)=>{
+socket.on('got_fetched?',(data)=>{
     //const msg_token_list = data.msg_list.map(i => i[0])
     //const msg_main_list = data.msg_list.map(i => i[1]) 
     const content_list = data;   

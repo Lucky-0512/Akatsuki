@@ -153,9 +153,7 @@ def final_auth():
                   
 
                 ]
-
-
-                
+             
 
                 
                 choice_pic = random.randint(0,len(pics_list)-1)
@@ -252,9 +250,17 @@ def logout_user(data):
 def lifetalks(data):
     if data['status'] == True:
         join_room(room = data['room'])
-
         print('joined!')
+        def fetch_msgs():  # loading stuff related to that room from db
+            cur.execute('select token_no,message from messages where room = %s',(data['room']))
+            fetch_data = cur.fetchall()
+            cur.execute('select distinct token_no from messages where room = %s AND user_mail=%s',(data,session['email']))
+            current_token = cur.fetchall()
+            msgs_fetched = [ [i[0],i[1]] for i in fetch_data]
+            print(msgs_fetched)
+            emit('got_fetched?',{'msg_list':msgs_fetched,'token_type':current_token})
         
+
 ## a socket listenr to insert data into db specific to rooms.
 @socketio.on('cha')
 def insert_msg(data):
@@ -265,7 +271,8 @@ def insert_msg(data):
     room = data['room']
     cur.execute('INSERT INTO messages(token_no,user_name,message,room,user_mail) values(%s,%s,%s,%s,%s)',(token,name,msg_content,email,room))
     conn.commit()       # commiting the chages after making changes to db .
-    emit('broadcast_msg',msg_content,broadcast=True,to=room)  #broadcasting messgae to client. to append t div such that it refelct s for very user on the chat.
+
+    #emit('broadcast_msg',msg_content,broadcast=True,to=room)  #broadcasting messgae to client. to append t div such that it refelct s for very user on the chat.
 
 
 ### bro, this is yet to be done which is at hte highest priority curretly.
@@ -279,14 +286,9 @@ def insert_msg(data):
 
 
 @socketio.on('fetch_msgs')
-def fetch_msgs(data):
-    cur.execute('select token_no,message from messages where room = %s',(data))
-    fetch_data = cur.fetchall()
-    cur.execute('select distinct token_no from messages where room = %s AND user_mail=%s',(data,session['email']))
-    current_token = cur.fetchall()
-    msgs_fetched = [ [i[0],i[1]] for i in fetch_data]
-    print(msgs_fetched)
-    emit('got_fetched?',{'msg_list':msgs_fetched,'token_type':current_token})
+def send_message(data):
+    room_name = data['toroom']
+    emit('addoff',data['msg_value'],to=room_name)
 
 
     
