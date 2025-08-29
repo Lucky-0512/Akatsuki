@@ -33,7 +33,7 @@ app.secret_key = "AKATSUKIWATSIDHOTHA" # my secret key used for locking session 
 
 # setting up otp message.
 def otp_prepare(to_email,otp):
-    msg= EmailMessage()
+    msg= EmailMessage()  # preparing the message format.
     msg['subject'] = "your OTP from Akatsuki Applicaiton"
     msg['From'] = gmail_master
 
@@ -190,6 +190,10 @@ def index():
 def login_redirect():
     return render_template("login.html")
 
+@app.route('/register')
+def reg_user():
+    return render_template("register.html")
+
 # logout route
 @app.route('/logout')
 def logout():
@@ -203,7 +207,6 @@ def serve():
 '''/*******************************************************************************************************************/'''
 
 ## SOCKET EVENTS / ROUTES ##
-
 
 @socketio.on('connect')
 def handle_connect():
@@ -250,7 +253,7 @@ def logout_user(data):
 def lifetalks(data):
     if data['status'] == True:
         join_room(room = data['room'])
-        print('joined!')
+        print(f'joined room : {data['room']}')
         def fetch_msgs():  # loading stuff related to that room from db
             cur.execute('select token_no,message from messages where room = %s',(data['room']))
             fetch_data = cur.fetchall()

@@ -4,8 +4,6 @@ const faq = document.querySelectorAll(".faq")
 const auth_box  =document.getElementById("box_login")
 const style_tag = document.createElement("style")
 
-const socket = io();
-
 const textMap = {
     faq1: "faq1mama",
     faq2: "faq2mama",
@@ -74,7 +72,7 @@ async function handle_otp(){
     const res = await fetch("/verify-otp",{   // this is a classic request structure of JS. 
         method :  "POST",  // request type
         headers: {
-            "Content-Type": "application/json"   // contnt type
+            "Content-Type": "application/json"   // content type
           },
         body: JSON.stringify({ otp: getval }) // stringify is gonna covert th json object into a JSON string
     })
@@ -145,11 +143,13 @@ async function handle_otp_login(){
 
     else{
         
-        
+
         window.location.href = "/serve";
+        
        
 
     }
+
 
 }
 
@@ -321,7 +321,7 @@ socket.on('user_joined',(data)=>{
 
 })
 
-// et's add the user text fncionality.
+// let's add the user text functionality.
 const msg_ip = document.getElementById('chat_ip')
 const chat_interface = document.getElementById('chat_interface')
 
@@ -340,12 +340,14 @@ socket.on('session_data',(data)=>{
 
 msg_ip.addEventListener('keydown',(e)=>{
     if(e.key === "Enter"){
+        if(msg_ip.value !== ''){
         channels.forEach((el)=>{
             // this set of data has the user_msg copntent field that is sent to server.
             const prep_info = {'token':`${session_data.token}`,"msg_content":`${msg_ip.value}`,'room':'lifetalks','email':`${session_data.email}`,'name':`${session_data.name}`}
             // we can simple add divs to the chat intreface on client side. but it will show up irrespective of the channel triggerd.
             // so we need to append it only to the users currently active in that chat interface.
-
+        
+            
             if(el.textContent == "# life-talks 🍉"){
                 prep_info.room = 'lifetalks'
  
@@ -378,9 +380,8 @@ msg_ip.addEventListener('keydown',(e)=>{
         
                 })
 
-      
-
-     
+        }
+    
 
     }
 })
