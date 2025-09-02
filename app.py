@@ -254,14 +254,15 @@ def lifetalks(data):
     if data['status'] == True:
         join_room(room = data['room'])
         print(f'joined room : {data['room']}')
-        def fetch_msgs():  # loading stuff related to that room from db
-            cur.execute('select token_no,message from messages where room = %s',(data['room']))
-            fetch_data = cur.fetchall()
-            cur.execute('select distinct token_no from messages where room = %s AND user_mail=%s',(data,session['email']))
-            current_token = cur.fetchall()
-            msgs_fetched = [ [i[0],i[1]] for i in fetch_data]
-            print(msgs_fetched)
-            emit('got_fetched?',{'msg_list':msgs_fetched,'token_type':current_token})
+
+         # loading stuff related to that room from db
+        cur.execute('select token_no,message from messages where room = %s',(data['room'],))
+        fetch_data = cur.fetchall()
+        cur.execute('select distinct token_no from messages where room = %s AND user_mail=%s',(data['room'],session['email'],))
+        current_token = cur.fetchall()
+        msgs_fetched = [ [i[0],i[1]] for i in fetch_data]
+        print(msgs_fetched)
+        emit('got_fetched?',{'msg_list':msgs_fetched,'token_type':current_token})
         
 
 ## a socket listenr to insert data into db specific to rooms.
