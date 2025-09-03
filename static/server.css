@@ -144,6 +144,8 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    overflow-y: auto;   /* this is to set the vertical overflow as scroll bar */
+    overflow-x: hidden; /* wrap the overflown content from the chat Interface*/
 
 }
 
@@ -222,7 +224,7 @@
 }
 
 .chatbubble_own {
-    display: inline-block;
+    display: inline-block; /* this is to auto set heihgt based on the content length in the block - dynamic setting*/
     background: #4a90e2;
     color: white;
     padding: 8px 12px;
@@ -230,7 +232,9 @@
     max-width: 40%;
     word-wrap: break-word;
     margin: 4px 0;
-    margin-right: 2vh;
+    margin-left: auto;
+    font-family: mcregular;
+    
   }
 
 
@@ -241,7 +245,7 @@
     padding: 8px 12px;
     border-radius: 12px;
     max-width: 40%;
-    word-wrap: break-word;
+    word-wrap: break-word;  /* this is tot break a long word into multiple lines. */
     margin: 4px 0;
     margin-left: 2vh;
   }

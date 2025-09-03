@@ -1,0 +1,74 @@
+Akatsuki checklist: 
+
+HTML,CSS and JS : all work fine.
+Flask : no issues , root clear :)
+Sockets : web socket connection established and works fine :)
+Database setup : 
+
+* neonDB postegreSQL connection established (via Psycopg2).
+  able to write into, update and fetch the data from the DB => :)
+
+OTP : via google smtp service, => on flask app.py, status : fine :)
+
+UI : currently using CSS-flexbox, ik it's cringe UI but not bad :)
+	=> needs improvement.
+
+Auth :
+
+* regular email auth => perfectly works :)
+	exceptions : email formatting validation on server side is yet to be done :(
+
+* Oauth google authentication : still pending :(
+
+
+// partially done / Undone
+
+/serve - route [main server Page]
+
+* profile Box
+
+* leaderboard
+
+* members list
+
+* chat-interface UI
+
+* attachements & stroing them on CDN(google drive )
+
+* Msg UI
+
+* Channels toggling
+
+* broadcasting msgs
+
+* load data from DB on toggling & loading positions
+
+* notifications
+
+* logout 
+
+* call feature
+
+* AI moderation system [via n8n] 
+
+* user XP dashboard
+
+* settings page
+
+* emoji panel + [GIF] via API?
+
+* segregating data based on dates in chat interface.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

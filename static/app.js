@@ -87,8 +87,16 @@ async function handle_otp(){
     }
 
     else{
-
         window.location.href = "/passwd_box";
+        /*if ( document.getElementById("otp_sent_desc").textContent == "Enter the OTP sent to your email to reset password"){
+            window.location.href = "/reset_pass.html"
+        }
+
+        else if(document.getElementById("otp_sent_desc").textContent == "Enter the OTP sent to your email to verify"){
+            window.location.href = "/passwd_box";
+        }*/
+
+        
 
     }
 
@@ -337,35 +345,59 @@ socket.on('session_data',(data)=>{
 
 
 // this event listener to insert the user netered in the db and ask server to fetch msg so that JS can erecive the same msg and add it to div, (via another listener)
+const room_title = document.getElementById('room_title');
 
 msg_ip.addEventListener('keydown',(e)=>{
     if(e.key === "Enter"){
         if(msg_ip.value !== ''){
-        channels.forEach((el)=>{
             // this set of data has the user_msg copntent field that is sent to server.
             const prep_info = {'token':`${session_data.token}`,"msg_content":`${msg_ip.value}`,'room':'lifetalks','email':`${session_data.email}`,'name':`${session_data.name}`}
-            // we can simple add divs to the chat intreface on client side. but it will show up irrespective of the channel triggerd.
-            // so we need to append it only to the users currently active in that chat interface.
-        
-            
-            if(el.textContent == "# life-talks 🍉"){
+
+            if(room_title.textContent == "# life-talks 🍉"){
                 prep_info.room = 'lifetalks'
- 
-                // telling srvr to broadcast msg 
+
+                  // telling srvr to broadcast msg 
                 socket.emit('fetch_msgs',{'toroom':prep_info.room,'msg_value':prep_info.msg_content})
-                
+
+
             }
-            
-            else if(el.textContent == "# muscle 💪"){
-                prep_info.room = 'muscle'
-               // chat_interface.innerHTML = ''
+
+            else if(room_title.textContent == "# muscle 💪"){
+                 prep_info.room = 'muscle'
+   
               
                 // telling srvr to load up all msg ist of room = muscle.
                 socket.emit('fetch_msgs',{'toroom':prep_info.room,'msg_value':prep_info.msg_content})
                 
             }
+
+            else if(room_title.textContent == "# money 💰" ){
+                prep_info.room = 'money'
+                
+                // telling srvr to load up all msg ist of room = moey.
+                socket.emit('fetch_msgs',{'toroom':prep_info.room,'msg_value':prep_info.msg_content})
+
+            }
+            /*
+        channels.forEach((el)=>{
             
-            else if(el.textContent == "# money 💰"){
+            
+            // we can simple add divs to the chat intreface on client side. but it will show up irrespective of the channel triggerd.
+            // so we need to append it only to the users currently active in that chat interface.
+            // update on the above Lines : actually this is fixed and the data wont refelct, coz i used Join_rooms(room)
+            
+            if(el.textContent == "# life-talks 🍉"){
+                
+ 
+              
+                
+            }
+            
+            else if(el.textContent == ){
+               
+            }
+            
+            else if(el.textContent == ){
                 prep_info.room = 'money'
                // chat_interface.innerHTML = ''
                 
@@ -378,7 +410,7 @@ msg_ip.addEventListener('keydown',(e)=>{
 
 
         
-                })
+                })*/
 
         }
     
@@ -403,29 +435,37 @@ socket.on('addoff',(data)=>{
 //for al the other msgs , append it to the right.
     
 
+
 socket.on('got_fetched?',(data)=>{
     //const msg_token_list = data.msg_list.map(i => i[0])
     //const msg_main_list = data.msg_list.map(i => i[1]) 
-    const content_list = data;   
-    content_list.forEach((i) =>{
-        if(i[0] === data.token_type){     
+    const content_list = data.msg_list;  
+        
+         content_list.forEach((i) =>{
+            
+        if(i[0] == data.token_type){     
+            console.log(i[0] == data.token_type)
             // put it in DIV and append as child of the right of the div.
-            const div_load = document.createElement(div)
+            const div_load = document.createElement('div')
             div_load.classList.add('chatbubble_own')
             div_load.textContent = i[1]
-            chat_interface.appendChild(div_load)                       
-    
+            chat_interface.appendChild(div_load)   
+            
     
         }
 
         else{
 
             // put it in DIV and append as child of the left of the div.
-            const div_load = document.createElement(div)
+            const div_load = document.createElement('div')
             div_load.classList.add('chatbubble_others')
             div_load.textContent = i[1]
             chat_interface.appendChild(div_load)   
+            
         }
+
+        chat_interface.scrollTop = chat_interface.scrollHeight;         // telloing the scroll bar to scroll top until the scroll height => to fetch the latest msg        
+    
 
     })
 

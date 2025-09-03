@@ -59,6 +59,24 @@ def send_otp():
 
     return render_template("verify_otp.html")
 
+# now, sending the message to the mail.
+@app.route("/send_otp_reset",methods = ["POST"])
+def send_otp_reset():
+    email = request.form.get("e-mail")    # geting the email from the usr's input
+    otp = str(random.randint(100000, 999999))  # geenrating a randome number as otp blw th give range
+
+    session['email'] = email   # storing emails in sessions
+    session['otp'] = otp       # storing otp temporaily in sessions
+
+    otp_prepare(email,otp)
+
+    return render_template("forgot_pass/verify_reset.html")
+
+## this is to locate password_box_reset.html for client side navigation.
+@app.route('/password_box_reset')
+def password_box_reset():
+    return render_template('/forgot_pass/password_box_reset.html')
+
 #***************************************************************************************#
 
 # L O G I N  R O U T E S
@@ -113,6 +131,14 @@ def verify():
           return jsonify({'status': 'success', 'message': 'OTP verified!'}) # response to JS
     else:
         return jsonify({'status': 'fail', 'message': 'Invalid OTP'}) # response to JS
+
+
+# route to insert new password in to the DB.
+@app.route('/insert_pass',methods=['POST'])
+def update_pass():
+    updat_pass = request.form.get("passwd")
+    cur.execute('update table auth set password =%s where email=%s',(updat_pass,session['email']))
+    conn.commit()
 
 
 @app.route("/send_pass",methods = ["POST"])
@@ -175,6 +201,15 @@ def final_auth():
 ## O T H E R  R O U T E S.
 
         
+
+#reset password on login page.
+@app.route('/forgot_pass')
+def reset_otp():
+    return render_template('forgot_pass/reset_pass.html')
+
+
+
+
 # password UI route
 @app.route("/passwd_box")
 def password_ip():
@@ -237,7 +272,6 @@ def handle_connect():
     emit("session_data",{"token" : token_no,"email":email,'name':name})
 
 
-
 @socketio.on('logout')
 def logout_user(data):
     if data == True:
@@ -295,7 +329,7 @@ def send_message(data):
     emit('addoff',data['msg_value'],to=room_name)
 
 
-    
+
         
 
 ##########################################################################################
