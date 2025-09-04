@@ -137,8 +137,9 @@ def verify():
 @app.route('/insert_pass',methods=['POST'])
 def update_pass():
     updat_pass = request.form.get("passwd")
-    cur.execute('update table auth set password =%s where email=%s',(updat_pass,session['email']))
+    cur.execute('update table AUTH set password =%s where email=%s',(updat_pass,session['email']))
     conn.commit()
+    emit('/pass_reset_success',{'status' : "Password Reset successful ✅"})
 
 
 @app.route("/send_pass",methods = ["POST"])
