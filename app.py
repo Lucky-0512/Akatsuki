@@ -6,8 +6,11 @@ import psycopg2 # connecting PostgreSQL (online),
 import smtplib  # msg sending service from google/
 import random   # to generate otps ad random stuff like uuid..etc
 from email.message import EmailMessage  # to strup the email-msg object.
-from datetime import date
+from datetime import date,datetime
 
+
+now = datetime.now() # holds the complete timestamps with YR-MO-DAY HR-MIN-SEC-ms format.
+print(now)
 # importing socketio packages in python.
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
 
@@ -266,7 +269,7 @@ def handle_connect():
     pic = prof_data[6]
     xp = prof_data[-2]
     prof_data = [token_no,email,name,is_active,pic,xp]
-    print(pic)
+    print(pic) # to check the pics CDN link.
    
     # now display username and xp into leaderboard from the dict.
     emit("leaderboard",leader_list,broadcast=True)
@@ -293,11 +296,12 @@ def lifetalks(data):
         print(f'joined room : {data['room']}')
 
          # loading stuff related to that room from db
-        cur.execute('select token_no,message from messages where room = %s',(data['room'],))
+        cur.execute('select token_no,user_name,message,time from messages where room = %s',(data['room'],))
         fetch_data = cur.fetchall()
         cur.execute('select distinct token_no from messages where room = %s AND user_mail=%s',(data['room'],session['email'],))
         current_token = cur.fetchall()
-        msgs_fetched = [ [i[0],i[1]] for i in fetch_data]
+        # preparing the time format.
+        msgs_fetched = [ [i[0],i[1],i[2],i[3].strftime("%H:%M")] for i in fetch_data]
         print(msgs_fetched)
         emit('got_fetched?',{'msg_list':msgs_fetched,'token_type':current_token})
         
@@ -310,26 +314,26 @@ def insert_msg(data):
     msg_content = data['msg_content']
     name = data['name']
     room = data['room']
-    cur.execute('INSERT INTO messages(token_no,user_name,message,room,user_mail) values(%s,%s,%s,%s,%s)',(token,name,msg_content,email,room))
+    cur.execute('INSERT INTO messages(token_no,user_name,message,room,user_mail) values(%s,%s,%s,%s,%s)',(token,name,msg_content,room,email))
     conn.commit()       # commiting the chages after making changes to db .
-
-    #emit('broadcast_msg',msg_content,broadcast=True,to=room)  #broadcasting messgae to client. to append t div such that it refelct s for very user on the chat.
-
-
+    print('message inserted!')
+    
 ### bro, this is yet to be done which is at hte highest priority curretly.
 
 # you need to fetch all te msgs from the db to the socet listerner based on room given by the dtaa request freed from JS.
 # and also the JS should handle the message box div's positon efore append it to the div.
 # i.e if the msg token_no asscociated = session[token] i.e is th current user's token, then append it to the left.
 # for al the other msgs , append it to the right.
-# 
 # for now I'm pushing thee source code to the git hub. # 17/08 2025 @6 :32 pm.   
 
 
 @socketio.on('fetch_msgs')
 def send_message(data):
     room_name = data['toroom']
-    emit('addoff',data['msg_value'],to=room_name)
+    msg_value = data['msg_value']
+    time_stp = now.strftime("%H:%M")
+    print(time_stp)
+    emit('addoff',{'msg_value':msg_value,'time':time_stp,'name':data['name']},to=room_name)
 
 ##########################################################################################
     

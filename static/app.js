@@ -292,6 +292,9 @@ user_icon.addEventListener('click',()=>{
 
 const channels = document.querySelectorAll('.channels')
 
+// by default we show up the room : lifetalks on screen.
+socket.emit('channel_triggered',{'status':true,'room':"lifetalks"}) 
+
 channels.forEach((el)=>{
     el.addEventListener('click',()=>{  // going through everychanngel and check for the channel toggled.
         const room_title = document.getElementById('room_title')
@@ -300,16 +303,16 @@ channels.forEach((el)=>{
         // loading up all the data from the server on toggling.
 
         // emitting a socket event.
-        if(el.textContent == "# life-talks 🍉"){
+        if(el.id == "gen"){
             chat_interface.innerHTML = ''
             // sending the triggerd channel/room name to the server
             socket.emit('channel_triggered',{'status':true,'room':"lifetalks"}) 
                     }
-        else if(el.textContent == "# muscle 💪"){
+        else if(el.id == "muscle"){
             chat_interface.innerHTML = ''
             socket.emit('channel_triggered',{'status':true,'room':"muscle"})
         }
-        else if(el.textContent == "# money 💰"){
+        else if(el.id == "money"){
             chat_interface.innerHTML = ''
             socket.emit('channel_triggered',{'status':true,'room':"money"})
         }
@@ -357,7 +360,7 @@ msg_ip.addEventListener('keydown',(e)=>{
                 prep_info.room = 'lifetalks'
 
                   // telling srvr to broadcast msg 
-                socket.emit('fetch_msgs',{'toroom':prep_info.room,'msg_value':prep_info.msg_content})
+                socket.emit('fetch_msgs',{'toroom':prep_info.room,'msg_value':prep_info.msg_content,'name':prep_info.name})
 
 
             }
@@ -379,6 +382,9 @@ msg_ip.addEventListener('keydown',(e)=>{
 
             }
             
+            // telling flask listerner 'cha' that listens for data and inserts into DB.
+            socket.emit('cha',{'token':prep_info.token,'email':prep_info.email,'msg_content':prep_info.msg_content,'name':prep_info.name,'room':prep_info.room})
+            
         /*
                     
             // we can simple add divs to the chat intreface on client side. but it will show up irrespective of the channel triggerd.
@@ -397,7 +403,32 @@ socket.on('addoff',(data)=>{
                    
     // do these once the server boradcatss.
     const msg_holder = document.createElement('div')
-    msg_holder.textContent = data
+
+    
+    msg_holder.innerHTML = `
+            <div class='data_name'><u>${data.name}</u></div>
+            <div class="data_msg_value">${data.msg_value}</div>
+            <div class="data_time">${data.time}</div>
+            `
+
+    msg_holder.style.display = 'flex';
+    msg_holder.style.flexDirection = 'column';
+
+    const data_name = msg_holder.querySelector('.data_name')
+    const data_msg_value = msg_holder.querySelector('.data_msg_value')
+    const data_time = msg_holder.querySelector('.data_time')
+
+    // setting the css styling for time div
+    data_time.style.height='15%'
+    data_time.style.fontSize='x-small'
+    data_name.style.height = '65%'
+    data_time.style.textAlign = 'right'
+
+    // setting the css styling for user_name div
+    data_name.style.textAlign = 'left'
+    data_name.style.fontSize = 'small'
+ 
+
     msg_holder.classList.add('chatbubble_own')
     chat_interface.appendChild(msg_holder)
     msg_ip.value = ""
@@ -411,8 +442,6 @@ socket.on('addoff',(data)=>{
 
 
 socket.on('got_fetched?',(data)=>{
-    //const msg_token_list = data.msg_list.map(i => i[0])
-    //const msg_main_list = data.msg_list.map(i => i[1]) 
     const content_list = data.msg_list;  
         
          content_list.forEach((i) =>{
@@ -421,22 +450,67 @@ socket.on('got_fetched?',(data)=>{
             console.log(i[0] == data.token_type)
             // put it in DIV and append as child of the right of the div.
             const div_load = document.createElement('div')
+            div_load.innerHTML = `
+            <div class='data_name'><u>${i[1]}</u></div>
+            <div class='data_msg_value'>${i[2]}</div>
+            <div class='data_time'>${i[3]}</div>`
+
+            div_load.style.display = 'flex';
+            div_load.style.flexDirection = 'column';
+
+            const data_name = div_load.querySelector('.data_name')
+            const data_msg_value = div_load.querySelector('.data_msg_value')
+            const data_time = div_load.querySelector('.data_time')
+
+            // setting the css styling for time div
+            data_time.style.height='15%'
+            data_time.style.fontSize='x-small'
+            data_name.style.height = '65%'
+            data_time.style.textAlign = 'right'
+
+            // setting the css styling for user_name div
+            data_name.style.textAlign = 'left'
+            data_name.style.fontSize = 'small'
+ 
+            chat_interface.appendChild(div_load)  
             div_load.classList.add('chatbubble_own')
-            div_load.textContent = i[1]
-            chat_interface.appendChild(div_load)   
-            
-    
+          
         }
 
         else{
 
             // put it in DIV and append as child of the left of the div.
             const div_load = document.createElement('div')
+            div_load.innerHTML = `
+            <div class='data_name'><u>${i[1]}</u></div>
+            <div class='data_msg_value'>${i[2]}</div>
+            <div class='data_time'>${i[3]}</div>`
+
+            div_load.style.display = 'flex';
+            div_load.style.flexDirection = 'column';
+
+
+            const data_name = div_load.querySelector('.data_name')
+            const data_msg_value = div_load.querySelector('.data_msg_value')
+            const data_time = div_load.querySelector('.data_time')
+
+            // setting the css styling for time div
+            data_time.style.height='15%'
+            data_time.style.fontSize='x-small'
+            data_name.style.height = '65%'
+            data_time.style.textAlign = 'right'
+
+            // setting the css styling for user_name div
+            data_name.style.textAlign = 'left'
+            data_name.style.fontSize = 'small'
+ 
+        chat_interface.appendChild(div_load)  
             div_load.classList.add('chatbubble_others')
-            div_load.textContent = i[1]
-            chat_interface.appendChild(div_load)   
+
             
         }
+
+
 
         chat_interface.scrollTop = chat_interface.scrollHeight;         // telloing the scroll bar to scroll top until the scroll height => to fetch the latest msg        
     
