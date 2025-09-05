@@ -309,7 +309,7 @@ channels.forEach((el)=>{
             chat_interface.innerHTML = ''
             socket.emit('channel_triggered',{'status':true,'room':"muscle"})
         }
-        else{
+        else if(el.textContent == "# money 💰"){
             chat_interface.innerHTML = ''
             socket.emit('channel_triggered',{'status':true,'room':"money"})
         }
@@ -378,39 +378,13 @@ msg_ip.addEventListener('keydown',(e)=>{
                 socket.emit('fetch_msgs',{'toroom':prep_info.room,'msg_value':prep_info.msg_content})
 
             }
-            /*
-        channels.forEach((el)=>{
             
-            
+        /*
+                    
             // we can simple add divs to the chat intreface on client side. but it will show up irrespective of the channel triggerd.
             // so we need to append it only to the users currently active in that chat interface.
             // update on the above Lines : actually this is fixed and the data wont refelct, coz i used Join_rooms(room)
-            
-            if(el.textContent == "# life-talks 🍉"){
-                
- 
-              
-                
-            }
-            
-            else if(el.textContent == ){
-               
-            }
-            
-            else if(el.textContent == ){
-                prep_info.room = 'money'
-               // chat_interface.innerHTML = ''
-                
-                // telling srvr to load up all msg ist of room = moey.
-                socket.emit('fetch_msgs',{'toroom':prep_info.room,'msg_value':prep_info.msg_content})
-
-            }
-
-            socket.emit('cha',prep_info)  // emit event caught by a socket listener on app.py that listens and insert the field in DB.
-
-
-        
-                })*/
+        */
 
         }
     

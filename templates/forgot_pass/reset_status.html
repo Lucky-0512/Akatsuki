@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block reset_status %}
+
+
+<div id="reset_pass_status_container" style="border: 1px solid white; position: relative;left: 30%;top: 20%;">
+    <img src="/static/icons/reset_status.gif" alt="tick" style="height: 50vh;width: 80vh;">
+    <br>
+    <br>
+    <div id="text" style="font-family: mcregular;width: 80vh;text-align: center;">redirecting you to the login page...</div>
+
+    
+</div>
+
+
+
+{% endblock %}
+
+
+{% block redirect_script %}
+<script>
+    // needed to load.
+    setTimeout(() => {
+        window.location.href = '/login';
+        
+    }, 2000);
+</script>
+{% endblock %}
+
+

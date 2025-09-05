@@ -137,9 +137,11 @@ def verify():
 @app.route('/insert_pass',methods=['POST'])
 def update_pass():
     updat_pass = request.form.get("passwd")
-    cur.execute('update table AUTH set password =%s where email=%s',(updat_pass,session['email']))
+    #now let's hash that.
+    updat_pass_hashed = generate_password_hash(str(updat_pass))
+    cur.execute('update AUTH set password =%s where email=%s',(updat_pass_hashed,session['email']))
     conn.commit()
-    emit('/pass_reset_success',{'status' : "Password Reset successful ✅"})
+    return render_template('forgot_pass/reset_status.html')
 
 
 @app.route("/send_pass",methods = ["POST"])
@@ -329,12 +331,7 @@ def send_message(data):
     room_name = data['toroom']
     emit('addoff',data['msg_value'],to=room_name)
 
-
-
-        
-
 ##########################################################################################
-
     
 # Run the app - on condition check.
 if __name__ == "__main__":
