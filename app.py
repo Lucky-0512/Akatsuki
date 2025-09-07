@@ -252,6 +252,18 @@ def serve():
 @socketio.on('connect')
 def handle_connect():
     print("user connected!")
+
+    # fetch all user names here.
+    cur.execute('select name from auth where is_active = TRUE')
+    get_names = cur.fetchall()
+    member_list = [row[0] for row in get_names]
+    print(member_list)
+    emit('load_members',{'list':member_list},broadcast=True)
+
+    # to send the memeber_status on the server and broadcast it to all the memebrs on thes server.
+    emit('mem_status',{'stat':'true'},broadcast=True)
+
+
     emit('user_joined','u are Active ⚡',to=request.sid)
     # getting username, Xp from data from users table.
     cur.execute("select * from auth")
@@ -281,6 +293,8 @@ def handle_connect():
 @socketio.on('logout')
 def logout_user(data):
     if data == True:
+        cur.execute('update auth set is_active = FALSE where email=%s',(session['email'],))
+        conn.commit()
         session.clear()
         socketio.emit('logemout',True)
 
@@ -318,7 +332,7 @@ def insert_msg(data):
     conn.commit()       # commiting the chages after making changes to db .
     print('message inserted!')
     
-### bro, this is yet to be done which is at hte highest priority curretly.
+### bro, this is yet to be done which is at the highest priority curretly.
 
 # you need to fetch all te msgs from the db to the socet listerner based on room given by the dtaa request freed from JS.
 # and also the JS should handle the message box div's positon efore append it to the div.

@@ -188,6 +188,7 @@ if(verilog){
 
 const learboard = document.getElementById("leaderboard")
 socket.on('leaderboard',(data)=>{
+    learboard.innerHTML = ''
     data.forEach((el)=>{
         const div = document.createElement("div")
         if (div.textContent){
@@ -451,27 +452,19 @@ socket.on('got_fetched?',(data)=>{
             // put it in DIV and append as child of the right of the div.
             const div_load = document.createElement('div')
             div_load.innerHTML = `
-            <div class='data_name'><u>${i[1]}</u></div>
             <div class='data_msg_value'>${i[2]}</div>
             <div class='data_time'>${i[3]}</div>`
 
             div_load.style.display = 'flex';
             div_load.style.flexDirection = 'column';
 
-            const data_name = div_load.querySelector('.data_name')
-            const data_msg_value = div_load.querySelector('.data_msg_value')
             const data_time = div_load.querySelector('.data_time')
 
             // setting the css styling for time div
             data_time.style.height='15%'
             data_time.style.fontSize='x-small'
-            data_name.style.height = '65%'
             data_time.style.textAlign = 'right'
 
-            // setting the css styling for user_name div
-            data_name.style.textAlign = 'left'
-            data_name.style.fontSize = 'small'
- 
             chat_interface.appendChild(div_load)  
             div_load.classList.add('chatbubble_own')
           
@@ -519,4 +512,41 @@ socket.on('got_fetched?',(data)=>{
 
 
 })    
+
+
+
+// to load up all the members of the server when a user joins!
+
+const members_box=document.getElementById('members')
+
+// get div to store list of members
+const list_div = members_box.querySelector('#member_list')
+socket.on('load_members',(data)=>{
+    list_div.innerHTML = '';
+    mem_list = data.list
+    let mem_status = '🟢';
+    mem_list.forEach((i)=>{
+        const list_bubble = document.createElement('div')
+        list_bubble.classList.add('listbubble')
+
+        socket.on('mem_status',(data)=>{
+            console.log(data)
+            if(data.stat == 'true'){
+                mem_status = '🟢';
+
+            }
+            else{
+                mem_status = '🔴'
+            }
+        })
+
+        list_bubble.innerHTML = `
+        <div style ='font-size:medium;font-family:mcregular'>${i}</div>
+        <div>${mem_status}</div>
+        `
+        // append list bubble into the memberlist
+        list_div.appendChild(list_bubble)
+    })
+
+})
 

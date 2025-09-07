@@ -250,4 +250,17 @@
     margin-left: 2vh;
   }
   
-  
+  .listbubble{
+    display: inline-block;
+    background: #36383a;
+    color: rgb(214, 13, 13);
+    padding: 8px 12px;
+    border-radius: 12px;
+    margin: 2px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+
+
+  }
