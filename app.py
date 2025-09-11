@@ -252,18 +252,36 @@ def serve():
 @socketio.on('connect')
 def handle_connect():
     print("user connected!")
+    # update user_status un auth table.
+    cur.execute('update auth set is_active = TRUE where email = %s',(session['email'],))
+    conn.commit()
 
     # fetch all user names here.
-    cur.execute('select name from auth where is_active = TRUE')
+    cur.execute('select name from auth')
     get_names = cur.fetchall()
     member_list = [row[0] for row in get_names]
     print(member_list)
-    emit('load_members',{'list':member_list},broadcast=True)
 
-    # to send the memeber_status on the server and broadcast it to all the memebrs on thes server.
-    emit('mem_status',{'stat':'true'},broadcast=True)
+    # now get all list of a memebers currently active on th server
+    cur.execute('select name from auth where is_active=TRUE')
+    get_names_is_active = cur.fetchall()
+    list_active = [i[0] for i in get_names_is_active]
+
+    # now get all the list of memebrs currently in active on the serve.
+    cur.execute('select name from auth where is_active=FALSE')
+    get_names_is_inactive = cur.fetchall()
+    list_inactive = [i[0] for i in get_names_is_inactive] 
 
 
+    print(list_inactive)
+    print(list_active)
+
+
+    # sending active and nactive members data to the client.
+    emit('load_members',{'list':member_list,'list_active':list_active,'list_inactive':list_inactive},broadcast=True)
+
+
+    # sending the user_joined status to the cleint for updating the profile box.
     emit('user_joined','u are Active ⚡',to=request.sid)
     # getting username, Xp from data from users table.
     cur.execute("select * from auth")
@@ -307,7 +325,7 @@ def logout_user(data):
 def lifetalks(data):
     if data['status'] == True:
         join_room(room = data['room'])
-        print(f'joined room : {data['room']}')
+        print(f'joined room : {data["room"]}')
 
          # loading stuff related to that room from db
         cur.execute('select token_no,user_name,message,time from messages where room = %s',(data['room'],))
@@ -350,6 +368,10 @@ def send_message(data):
     emit('addoff',{'msg_value':msg_value,'time':time_stp,'name':data['name']},to=room_name)
 
 ##########################################################################################
+
+@socketio.on('stop_typing')
+def reset_back(data):
+    emit('reset_back_status',{'name_user':data['user']},broadcast=True)
     
 # Run the app - on condition check.
 if __name__ == "__main__":

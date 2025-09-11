@@ -88,16 +88,6 @@ async function handle_otp(){
 
     else{
         window.location.href = "/passwd_box";
-        /*if ( document.getElementById("otp_sent_desc").textContent == "Enter the OTP sent to your email to reset password"){
-            window.location.href = "/reset_pass.html"
-        }
-
-        else if(document.getElementById("otp_sent_desc").textContent == "Enter the OTP sent to your email to verify"){
-            window.location.href = "/passwd_box";
-        }*/
-
-        
-
     }
 
 }
@@ -239,11 +229,8 @@ socket.on('profile_data',(data)=>{
     status.textContent = `status : ${data[3]}`
     tok_no.textContent = `token : ${data[0]}`
 
-
     
 })
-
-
 
 // let's logut the user from the session on hitting the logout button on the menu bar.
 
@@ -260,7 +247,6 @@ socket.on('logemout',(data)=>{
     }
 })
 
-
 // implementing close button for profilr box.
 
 const prof_box_exit = document.getElementById('exit')
@@ -276,7 +262,6 @@ prof_box_exit.addEventListener('click',()=>{
     profile_box.classList.add('exit_button_profile_hide')
     
 })
-
 
 user_icon.addEventListener('click',()=>{
     if (profile_box.classList.contains('exit_button_profile_hide')){
@@ -345,7 +330,6 @@ socket.on('session_data',(data)=>{
                 
                 
 })      
-
 
 
 // this event listener to insert the user netered in the db and ask server to fetch msg so that JS can erecive the same msg and add it to div, (via another listener)
@@ -519,34 +503,126 @@ socket.on('got_fetched?',(data)=>{
 
 const members_box=document.getElementById('members')
 
+// get the message input box.
+const chat_ip_element = document.getElementById('chat_ip') 
+
 // get div to store list of members
 const list_div = members_box.querySelector('#member_list')
+
+let list_active_typing; 
+
 socket.on('load_members',(data)=>{
     list_div.innerHTML = '';
-    mem_list = data.list
-    let mem_status = '🟢';
+    const mem_list = data.list
+    const mem_list_active = data.list_active
+    const mem_list_inactive = data.list_inactive
+    list_active_typing = mem_list_active
+
     mem_list.forEach((i)=>{
         const list_bubble = document.createElement('div')
+        list_bubble.setAttribute('class','listbubbly')
         list_bubble.classList.add('listbubble')
+        list_bubble.setAttribute('data-user',`${i}`)
 
-        socket.on('mem_status',(data)=>{
-            console.log(data)
-            if(data.stat == 'true'){
-                mem_status = '🟢';
 
-            }
-            else{
-                mem_status = '🔴'
-            }
-        })
+        if(mem_list_active.includes(i)){
+            list_bubble.innerHTML = `
+            <div style ='font-size:medium;font-family:mcregular' class='mem_name'>${i}</div>
+            <div class='indicator'>${'🟢'}</div>
+            `
 
-        list_bubble.innerHTML = `
-        <div style ='font-size:medium;font-family:mcregular'>${i}</div>
-        <div>${mem_status}</div>
-        `
-        // append list bubble into the memberlist
+        }
+        else{
+            list_bubble.innerHTML = `
+            <div style ='font-size:medium;font-family:mcregular' class='mem_name'>${i}</div>
+            <div class='indicator'>${'🔴'}</div>
+            `
+
+        }
+
+        // apped the list bubbe to the list_div.
+
         list_div.appendChild(list_bubble)
+
+ 
+
     })
 
 })
+
+let typingTimer 
+let data_name='';
+// getting the session[name]
+socket.on('session_data',(data)=>{
+    data_name = data.name  // this gives th name of the current user.
+        
+        })
+
+let event_triggered = false;         
+
+chat_ip_element.addEventListener('input',()=>{
+    event_triggered = true
+
+    const bubbly = list_div.querySelectorAll('.listbubbly') 
+    bubbly.forEach((i)=>{
+        const indicator = i.querySelector('.indicator')
+        const mem_name = i.querySelector('.mem_name')
+        if(mem_name.textContent == data_name){
+            indicator.textContent = 'typing...'
+        } 
+
+
+    })
+
+    if(event_triggered){
+        event_triggered = false
+        clearTimeout(typingTimer); // clearing the previous timer
+        typingTimer = setTimeout(() => {
+        socket.emit('stop_typing', {'user': data_name });
+        console.log(data_name)
+    
+    
+      }, 2000); // 2s inactivity - then only uu emit to flask saying that the user has stopped typing and canel the status bolke.
+    }
+
+    console.log('user released it!')
+
+})
+
+
+
+
+
+socket.on('reset_back_status',(data)=>{
+    console.log('i got it bruhh! ')
+
+    // get the vaue of mem_list_active.
+    const mem_list_active = list_active_typing
+    console.log(mem_list_active)
+    const get_user_bubble = list_div.querySelector(`[data-user ="${data.name_user}"]`)  // usign custom attributes to pick div of matchingn name. 
+ 
+    if(get_user_bubble){
+            const indicator = get_user_bubble.querySelector('.indicator')
+            console.log('kellymalesss!')
+            if( mem_list_active.includes(data.name_user)){
+
+                indicator.textContent = '🟢'
+            }
+            else{
+                indicator.textContent = '🔴'
+                //console.log(false)
+
+            }
+        }
+
+        else{
+            
+        console.log('user bubble doesnt exist!')
+        }
+
+
+    })
+
+
+
 
