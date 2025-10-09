@@ -1,6 +1,7 @@
-Flask>=2.3.2
-Flask-SocketIO>=6.6.0
+Flask-SocketIO
 eventlet>=0.33.3
 psycopg2-binary>=2.9.7
 psycopg2
-
+Python>=3.10.10
+Flask>=3.1.1
+Werkzeug>=3.1.3
