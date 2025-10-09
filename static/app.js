@@ -176,9 +176,9 @@ if(verilog){
 
 // addig use data to leader board.
 
-const learboard = document.getElementById("leaderboard")
+const learboard_hold = document.getElementById("hold_leaders")
 socket.on('leaderboard',(data)=>{
-    learboard.innerHTML = ''
+    learboard_hold.innerHTML = ''
     data.forEach((el)=>{
         const div = document.createElement("div")
         if (div.textContent){
@@ -186,7 +186,7 @@ socket.on('leaderboard',(data)=>{
         }
         else{
             div.textContent = `${el[0]} : ${el[1]}`
-            learboard.appendChild(div)
+            learboard_hold.appendChild(div)
         }
 
     })
@@ -222,12 +222,12 @@ socket.on('profile_data',(data)=>{
     prof_img.style.height = "150px"
     prof_img.style.borderRadius = "100px"
     prof_pic.appendChild(prof_img)
-    prof_name.textContent = ` name : ${data[2]}`
-    age.textContent = "age : 0 yrs"   // this columns needs to be updted in the table too. with an edit option indeed!
-    hobby.textContent = "killing" // lol, im joking do the same here too
-    xp.textContent = `XP : ${data[5]}`
-    status.textContent = `status : ${data[3]}`
-    tok_no.textContent = `token : ${data[0]}`
+    prof_name.textContent = `* name : ${data[2]}`
+    age.textContent = `* age : 0 yrs     |     * XP : ${data[5]}`   // this columns needs to be updted in the table too. with an edit option indeed!
+    hobby.textContent = "* occupation: Hunter" // lol, im joking do the same here too
+    //xp.textContent = `XP : ${data[5]}`
+    status.textContent = `* status : ${data[3]}`
+    tok_no.textContent = `* token : ${data[0]}`
 
     
 })
@@ -284,7 +284,10 @@ socket.emit('channel_triggered',{'status':true,'room':"lifetalks"})
 channels.forEach((el)=>{
     el.addEventListener('click',()=>{  // going through everychanngel and check for the channel toggled.
         const room_title = document.getElementById('room_title')
-        room_title.textContent = el.textContent
+        if(el.tagName != 'INPUT'){
+            room_title.textContent = el.textContent
+            
+        }        
 
         // loading up all the data from the server on toggling.
 
@@ -355,7 +358,7 @@ msg_ip.addEventListener('keydown',(e)=>{
    
               
                 // telling srvr to load up all msg ist of room = muscle.
-                socket.emit('fetch_msgs',{'toroom':prep_info.room,'msg_value':prep_info.msg_content})
+                socket.emit('fetch_msgs',{'toroom':prep_info.room,'msg_value':prep_info.msg_content,'name':prep_info.name})
                 
             }
 
@@ -363,7 +366,7 @@ msg_ip.addEventListener('keydown',(e)=>{
                 prep_info.room = 'money'
                 
                 // telling srvr to load up all msg ist of room = moey.
-                socket.emit('fetch_msgs',{'toroom':prep_info.room,'msg_value':prep_info.msg_content})
+                socket.emit('fetch_msgs',{'toroom':prep_info.room,'msg_value':prep_info.msg_content,'name':prep_info.name})
 
             }
             
@@ -527,14 +530,14 @@ socket.on('load_members',(data)=>{
 
         if(mem_list_active.includes(i)){
             list_bubble.innerHTML = `
-            <div style ='font-size:medium;font-family:mcregular' class='mem_name'>${i}</div>
+            <div style ='font-size:medium;font-family:mcregular;color:white' class='mem_name'>${i}</div>
             <div class='indicator'>${'🟢'}</div>
             `
 
         }
         else{
             list_bubble.innerHTML = `
-            <div style ='font-size:medium;font-family:mcregular' class='mem_name'>${i}</div>
+            <div style ='font-size:medium;font-family:mcregular;color:white' class='mem_name'>${i}</div>
             <div class='indicator'>${'🔴'}</div>
             `
 
@@ -547,6 +550,8 @@ socket.on('load_members',(data)=>{
  
 
     })
+
+    socket.emit('tell_loaded',{'status':true})
 
 })
 
@@ -589,10 +594,6 @@ chat_ip_element.addEventListener('input',()=>{
 
 })
 
-
-
-
-
 socket.on('reset_back_status',(data)=>{
     console.log('i got it bruhh! ')
 
@@ -620,9 +621,104 @@ socket.on('reset_back_status',(data)=>{
         console.log('user bubble doesnt exist!')
         }
 
-
     })
 
 
 
 
+//****************************SEARCHING LOGIC FOR SEARCHING AKATSUKI MEMEEBRS IN THE SERVER. */
+
+socket.on('load_members',(data)=>{
+    const get_inp_box = document.getElementById("search_akatsuki_members")
+
+    console.log(get_inp_box)
+    const mem_list = data.list
+    const mem_list_active = data.list_active
+    // now writing the event listener that executes the searching funtionality as the user types.
+    get_inp_box.addEventListener("input",()=>{
+        const get_val = get_inp_box.value
+        list_div.innerHTML = "";
+
+        if(get_val === ""){
+            mem_list.forEach((i)=>{
+                const list_bubble = document.createElement('div')
+                list_bubble.setAttribute('class','listbubbly')
+                list_bubble.classList.add('listbubble')
+                list_bubble.setAttribute('data-user',`${i}`)
+        
+        
+                if(mem_list_active.includes(i)){
+                    list_bubble.innerHTML = `
+                    <div style ='font-size:medium;font-family:mcregular;color:white' class='mem_name'>${i}</div>
+                    <div class='indicator'>${'🟢'}</div>
+                    `
+        
+                }
+                else{
+                    list_bubble.innerHTML = `
+                    <div style ='font-size:medium;font-family:mcregular;color:white' class='mem_name'>${i}</div>
+                    <div class='indicator'>${'🔴'}</div>
+                    `
+        
+                }
+        
+                // apped the list bubbe to the list_div.
+        
+                list_div.appendChild(list_bubble)
+         
+        })
+    }
+
+        else{
+            // now filtering the matching elementsin order.
+            const latest = mem_list.filter(match => match.toLowerCase().includes(get_val))
+            // th above function checks for the matcihg order of charater set from every element of the memevber_list, everytiome to user types in the input box.
+
+            latest.forEach((i)=>{
+                const list_bubble = document.createElement('div')
+                list_bubble.setAttribute('class','listbubbly')
+                list_bubble.classList.add('listbubble')
+                list_bubble.setAttribute('data-user',`${i}`)
+    
+    
+                if(mem_list_active.includes(i)){
+                    list_bubble.innerHTML = `
+                <div style ='font-size:medium;font-family:mcregular;color:white' class='mem_name'>${i}</div>
+                <div class='indicator'>${'🟢'}</div>
+                `
+    
+                }
+                else{
+                    list_bubble.innerHTML = `
+                    <div style ='font-size:medium;font-family:mcregular;color:white' class='mem_name'>${i}</div>
+                    <div class='indicator'>${'🔴'}</div>
+                    `
+    
+                 }
+    
+            // apped the list bubbe to the list_div.
+    
+                list_div.appendChild(list_bubble)
+
+        })
+
+    }
+
+    
+})
+})
+
+// ********************************************** DONE WITH MEBERS LIST ANS SEARCHIHNG ***********************//
+
+
+
+//////////////////////////////////////////// NOW THE UPVOTE SYSTEM AND XP CONTRIBUTION ////////////////////////////////
+
+
+// STEP 1 : whenevr a user hovers over any of the msg in teh chat interface..there should an upvote popup.
+socket.on('let_hover_msgs',(data)=>{
+    console.log('i got triggered now!')
+    const list_msgs_loaded = chat_interface.children.length
+    console.log(list_msgs_loaded)
+
+})

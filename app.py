@@ -1,7 +1,7 @@
 # our flask app controller
 from flask import Flask,render_template,session,redirect,Response,send_file,request,jsonify,render_template_string
 # all imppppp funcitons from flask!!(abbove)
-import sys,os   # system modules.
+import sys,os   # system modules. / I never really used it rbooo :(
 import psycopg2 # connecting PostgreSQL (online), 
 import smtplib  # msg sending service from google/
 import random   # to generate otps ad random stuff like uuid..etc
@@ -29,7 +29,7 @@ cur = conn.cursor()  # creating a cursor object to exceute queries
 
 
 app = Flask(__name__) # initialising the flask app.
-socketio = SocketIO(app)
+socketio = SocketIO(app)   # initialising the web sockets.
 
 app.secret_key = "AKATSUKIWATSIDHOTHA" # my secret key used for locking session cookies.
 
@@ -203,11 +203,8 @@ def final_auth():
 
 #***********************************************************************************#
 
-
 ## O T H E R  R O U T E S.
-
         
-
 #reset password on login page.
 @app.route('/forgot_pass')
 def reset_otp():
@@ -221,7 +218,6 @@ def reset_otp():
 def password_ip():
     return render_template("password_box.html")
        
-
 
 @app.route("/")  # this is the rout for the home page
 def index():
@@ -279,6 +275,7 @@ def handle_connect():
 
     # sending active and nactive members data to the client.
     emit('load_members',{'list':member_list,'list_active':list_active,'list_inactive':list_inactive},broadcast=True)
+    emit('let_hover_msgs',{'allow':True},broadcast=True)
 
 
     # sending the user_joined status to the cleint for updating the profile box.
@@ -372,6 +369,13 @@ def send_message(data):
 @socketio.on('stop_typing')
 def reset_back(data):
     emit('reset_back_status',{'name_user':data['user']},broadcast=True)
+
+
+
+@socketio.on('tell_loaded')
+def hover_divs():
+    emit('let_hover_msgs',{'allow':True},broadcast=True)
+
     
 # Run the app - on condition check.
 if __name__ == "__main__":

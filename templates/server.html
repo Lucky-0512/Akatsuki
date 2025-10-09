@@ -16,15 +16,15 @@
 
     <div id="menu_bar" >
         <div  style="font-family: mcregular;color: antiquewhite; text-align: left; text-shadow: 2px .5px rgb(255, 0, 0);position: relative;left: 30px;font-size: large;width: 20%;">
-            <a href="/" style="text-decoration: none;"> A K A T S U K I</a>
+            <a href="/" style="text-decoration: none;font-size: larger;">&nbsp;&nbsp;&nbsp; A K A T S U K I</a>
 
         </div>
-        <div id="user_status" style="width: 60%;height: 100%;border: 1px solid white;color: white;text-align: center;font-family: mcregular;">
+        <div id="user_status" style="width: 60%;height: 100%;color: white;text-align: center;font-family: mcregular;padding-top: 2vh;font-size: large;">
             
         </div>
             <div id="menu_icons">
 
-                <div id="exit_door" style="font-family: mcregular;color: white;background-color: black;width: 10vh;height: 3vh;border: 1px solid white;position: relative;top: 1vh;margin-right: 3vh;text-align: center;">
+                <div id="exit_door" style="padding-top: 1vh;font-family: mcregular;color: white;background-color: rgba(216, 5, 5, 0.822);width: 10vh;height: 3vh;border: 1px solid white;position: relative;top: 1vh;margin-right: 3vh;text-align: center;">
                     logout
                 </div>
 
@@ -48,14 +48,17 @@
                     <div class="channels" id="muscle"># muscle 💪</div>
                     <div class="channels" id="money"># money 💰</div>
                     <br>
-                    <div id="leaderboard" class="channels">
-                        leaderboard 🏆
-                        <br>
-                        <input type="text" placeholder="search members" style="border: none;" class="channels search">
+                    <div id="leaderboard" class="search">
+ 
+                        <h3>
+                            leaderboard 🏆
+                        </h3>
+                        <input type="text" placeholder="enter names / token_no.." style="border: none;color: black;font-size: large;" class="search">
+                        <div id="hold_leaders"></div>
                     </div>
 
                 </div>
-                <div class="panels" id="mid">
+                <div class="panels" id="mid" >
 
                     <div id="room_title" style="font-family: mcregular;"># life-talks 🍉</div>
 
@@ -84,17 +87,17 @@
                 
                 <div class="panels" id="right" style="display: flex;flex-direction: column; align-items: center;">
                     <br>
-                    <div id="members" class="channels" style="display: flex;flex-direction: column;">
+                    <div id="members" class="search" style="display: flex;flex-direction: column;">
                         members ✔
                         <br>
-                        <input type="text" placeholder="search members" style="border: none;" class="channels search">
+                        <input type="text" placeholder="search members" style="border: none;" class="search" id="search_akatsuki_members">                   
                         <div id="member_list" style="border: 1px solid white;height: 100%;">
 
                         </div>
                         
                     </div>
 
-                    <div id="ur_XP" class="channels">
+                    <div id="ur_XP" class="search">
                         ur contribution 💹
                         
 
@@ -103,20 +106,21 @@
             </div>
         
         <div id="profile_box" class="exit_button_profile_hide">
+            <div  id="exit"> ❌</div>
             <div style="width: 150px;height: 150px;border-radius: 100px;border: 1px solid black;position: absolute;left: 30%;top: 10%;" id="prof_pic">
                
             </div>
-            <div  id="exit"> ❌</div>
-            <br>
-            <h2 id="tok_no"></h2>
-            <h3 id="prof_name"></h3>
-            <br>
-            <h4 id="prof_hobby"></h4>
-            <p id="age"></p>
-            <p id="prof_XP"></p>
-            <p id="status"></p>
             <br>
             
+            <div style="position: relative;left: 17%;top: 40%;">
+                <h2 id="tok_no" class="jingle_data"></h2>
+                <h3 id="prof_name" class="jingle_data"></h3>
+                <h4 id="prof_hobby" class="jingle_data"></h4>
+                <p id="age" class="jingle_data"></p>
+                <p id="status" class="jingle_data"></p>
+                
+            </div>
+
 
                 
         </div>
